@@ -5,11 +5,13 @@
  * The registrations product variation class extends the WC_Product_Variation product class
  * to create registrations product variations.
  *
- * @package		Registrations for WooCommerce\WC_Product_Registrations
- * @since		1.3
+ * @package     Registrations for WooCommerce\WC_Product_Registrations
+ * @since       1.3
  *
  */
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
 class WC_Product_Registrations extends WC_Product_Variable {
 	/**
@@ -42,7 +44,7 @@ class WC_Product_Registrations extends WC_Product_Variable {
 		return 'registrations';
 	}
 
-    /**
+	/**
 	 * Checks the product type to see if it is either this product's type or the parent's
 	 * product type.
 	 *
@@ -67,11 +69,11 @@ class WC_Product_Registrations extends WC_Product_Variable {
 	 * @param int $variation_id The variation ID to display schedule
 	 */
 	public function registration_schedule( $variation_id ) {
-		$start = get_post_meta( $variation_id , '_event_start_time', true );
-		$end = get_post_meta( $variation_id , '_event_end_time', true );
+		$start = get_post_meta( $variation_id, '_event_start_time', true );
+		$end   = get_post_meta( $variation_id, '_event_end_time', true );
 
-		if ( !empty( $start ) && !empty( $end ) ) {
-			$schedule = sprintf( __( 'From %s to %s' , 'registrations-for-woocommerce' ), $start, $end );
+		if ( ! empty( $start ) && ! empty( $end ) ) {
+			$schedule = sprintf( __( 'From %1$s to %2$s', 'registrations-for-woocommerce' ), $start, $end );
 			echo $schedule;
 		}
 	}
@@ -83,10 +85,10 @@ class WC_Product_Registrations extends WC_Product_Variable {
 	 *
 	 * @param int $variation_id The variation ID to display schedule.
 	 */
-	public function registration_date( $variation_id, $date_format = null  ) {
-		$date = get_post_meta( $variation_id , 'attribute_dates', true );
+	public function registration_date( $variation_id, $date_format = null ) {
+		$date = get_post_meta( $variation_id, 'attribute_dates', true );
 
-		if ( !empty( $date ) ) {
+		if ( ! empty( $date ) ) {
 			$formated_date = WC_Registrations_Admin::registration_variation_option_name( $date, $date_format );
 			echo $formated_date;
 		}
@@ -100,21 +102,20 @@ class WC_Product_Registrations extends WC_Product_Variable {
 	 * @param int $variation_id The variation ID to display schedule
 	 */
 	public function registration_days_of_week( $variation_id ) {
-		$date = get_post_meta( $variation_id , 'attribute_dates', true );
+		$date = get_post_meta( $variation_id, 'attribute_dates', true );
 
-		if ( !empty( $date ) ) {
+		if ( ! empty( $date ) ) {
 			$opt = json_decode( stripslashes( $date ) );
 
 			if ( $opt ) {
 				if ( $opt->type == 'single' ) {
 					echo date_i18n( 'l', strtotime( $opt->date ) );
-				}
-				elseif ( $opt->type == 'multiple' ) {
+				} elseif ( $opt->type == 'multiple' ) {
 
 					$date_option = '';
-					$size = count( $opt->dates );
+					$size        = count( $opt->dates );
 
-					for ( $i = 0; $i < $size ; $i++ ) {
+					for ( $i = 0; $i < $size; $i++ ) {
 						if ( $date_option == '' ) {
 							$date_option .= date_i18n( 'l', strtotime( $opt->dates[ $i ] ) );
 						} else {
@@ -123,32 +124,38 @@ class WC_Product_Registrations extends WC_Product_Variable {
 					}
 
 					echo $date_option;
-				}
-				elseif ( $opt->type == 'range' ) {
+				} elseif ( $opt->type == 'range' ) {
 					if ( $week_days = get_post_meta( $variation_id, '_week_days', true ) ) {
 						$content = '';
-						$count = 0;
+						$count   = 0;
 
-					    foreach( $week_days as $day ) {
-							if( $count > 0 ) {
+						foreach ( $week_days as $day ) {
+							if ( $count > 0 ) {
 								$content .= ', ';
 							}
 
-							switch( $day ) {
-								case 'sunday': $content .= __( 'sunday', 'registrations-for-woocommerce' );
-								break;
-								case 'monday': $content .= __( 'monday', 'registrations-for-woocommerce' );
-								break;
-								case 'tuesday': $content .= __( 'tuesday', 'registrations-for-woocommerce' );
-								break;
-								case 'wednesday': $content .= __( 'wednesday', 'registrations-for-woocommerce' );
-								break;
-								case 'thursday': $content .= __( 'thursday', 'registrations-for-woocommerce' );
-								break;
-								case 'friday': $content .= __( 'friday', 'registrations-for-woocommerce' );
-								break;
-								case 'saturday': $content .= __( 'saturday', 'registrations-for-woocommerce' );
-								break;
+							switch ( $day ) {
+								case 'sunday':
+									$content .= __( 'sunday', 'registrations-for-woocommerce' );
+									break;
+								case 'monday':
+									$content .= __( 'monday', 'registrations-for-woocommerce' );
+									break;
+								case 'tuesday':
+									$content .= __( 'tuesday', 'registrations-for-woocommerce' );
+									break;
+								case 'wednesday':
+									$content .= __( 'wednesday', 'registrations-for-woocommerce' );
+									break;
+								case 'thursday':
+									$content .= __( 'thursday', 'registrations-for-woocommerce' );
+									break;
+								case 'friday':
+									$content .= __( 'friday', 'registrations-for-woocommerce' );
+									break;
+								case 'saturday':
+									$content .= __( 'saturday', 'registrations-for-woocommerce' );
+									break;
 								default:
 							}
 
@@ -157,8 +164,7 @@ class WC_Product_Registrations extends WC_Product_Variable {
 
 						echo $content;
 					}
-				}
-				else {
+				} else {
 					return $opt;
 				}
 			}
@@ -196,10 +202,13 @@ class WC_Product_Registrations extends WC_Product_Variable {
 			}
 
 			wc_do_deprecated_action(
-				'woocommerce_variable_product_sync', array(
+				'woocommerce_variable_product_sync',
+				array(
 					$product->get_id(),
 					$product->get_visible_children(),
-				), '3.0', 'woocommerce_variable_product_sync_data, woocommerce_new_product or woocommerce_update_product'
+				),
+				'3.0',
+				'woocommerce_variable_product_sync_data, woocommerce_new_product or woocommerce_update_product'
 			);
 		}
 

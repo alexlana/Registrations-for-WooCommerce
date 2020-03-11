@@ -23,11 +23,13 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		parent::__construct( array(
-			'singular'  => __( 'Customer', 'woocommerce' ),
-			'plural'    => __( 'Customers', 'woocommerce' ),
-			'ajax'      => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Customer', 'woocommerce' ),
+				'plural'   => __( 'Customers', 'woocommerce' ),
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -67,38 +69,38 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 	 */
 	public function column_default( $row, $column_name ) {
 		global $wpdb;
-		$parent   = ! empty( $row[0]->get_parent_id() ) ? wc_get_product( $row[0]->get_parent_id() ) : '';
+		$parent = ! empty( $row[0]->get_parent_id() ) ? wc_get_product( $row[0]->get_parent_id() ) : '';
 
 		switch ( $column_name ) {
 
-			case 'variation_id' :
+			case 'variation_id':
 				return $row[0]->get_id();
 
 			case 'variation_name':
 				return $parent->registration_date( $row[0]->get_id() );
 
-			case 'product_name' :
+			case 'product_name':
 				return $parent->get_title();
 
-
-			case 'user_actions' :
+			case 'user_actions':
 				ob_start();
 				?><p>
 					<?php
 						$actions = array();
 
 						$actions['view'] = array(
-							'url'       => add_query_arg( 'details', $row[0]->get_id() ),
-							'name'      => __( 'Customers', 'woocommerce' ),
-							'action'    => "view"
+							'url'    => add_query_arg( 'details', $row[0]->get_id() ),
+							'name'   => __( 'Customers', 'woocommerce' ),
+							'action' => 'view',
 						);
 
 						foreach ( $actions as $action ) {
 							printf( '<a class="button tips %s" href="%s" data-tip="%s">%s</a>', esc_attr( $action['action'] ), esc_url( $action['url'] ), esc_attr( $action['name'] ), esc_attr( $action['name'] ) );
 						}
 
-					?>
-				</p><?php
+						?>
+				</p>
+				<?php
 				$user_actions = ob_get_contents();
 				ob_end_clean();
 
@@ -118,7 +120,7 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 			'variation_id'   => __( 'Variation ID', 'woocommerce' ),
 			'variation_name' => __( 'Date', 'woocommerce' ),
 			'product_name'   => __( 'Product Name', 'woocommerce' ),
-			'user_actions'   => __( 'Actions', 'woocommerce' )
+			'user_actions'   => __( 'Actions', 'woocommerce' ),
 		);
 
 		return $columns;
@@ -126,30 +128,30 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 
 	public function prepare_items() {
 		$args1 = array(
-			'post_type' => 'product',
+			'post_type'    => 'product',
 			'product_type' => WC_Registrations::$name,
 		);
 
 		$args2 = array(
-			'post_type' => 'shop_order',
-			'post_status' => array('wc-processing', 'wc-completed'),
+			'post_type'   => 'shop_order',
+			'post_status' => array( 'wc-processing', 'wc-completed' ),
 		);
 
 		$parent_variantions_products = get_posts( $args1 );
 
 		$orders_query = get_posts( $args2 );
 
-		$orders = array();
+		$orders     = array();
 		$variations = array();
-		$products = array();
+		$products   = array();
 
 		foreach ( $orders_query as $order_query ) {
-			$order = wc_get_order( $order_query );
+			$order    = wc_get_order( $order_query );
 			$orders[] = $order;
 		}
 
 		foreach ( $parent_variantions_products as $product_query ) {
-			$product = wc_get_product( $product_query );
+			$product    = wc_get_product( $product_query );
 			$products[] = $product;
 			foreach ( $product->get_available_variations() as $variation ) {
 				$variations[] = $variation;
@@ -168,12 +170,12 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 			}
 		}
 
-		$c = count($found);
+		$c = count( $found );
 
 		for ( $i = 0; $i < $c; $i++ ) {
 			for ( $k = $i + 1; $k < $c; $k++ ) {
-				if ( $found[$i][0]->get_id() == $found[$k][0]->get_id() ) {
-					unset( $found[$i] );
+				if ( $found[ $i ][0]->get_id() == $found[ $k ][0]->get_id() ) {
+					unset( $found[ $i ] );
 					break;
 				}
 			}
@@ -183,10 +185,12 @@ class WC_Report_List_Registration_Events extends WP_List_Table {
 
 		$this->items = array_values( $found );
 
-		$this->set_pagination_args( array(
-			'total_items' => count( $found ),
-			'per_page'    => count( $found ),
-			'total_pages' => 1
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => count( $found ),
+				'per_page'    => count( $found ),
+				'total_pages' => 1,
+			)
+		);
 	}
 }

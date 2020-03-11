@@ -23,11 +23,13 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 	 */
 	public function __construct() {
 
-		parent::__construct( array(
-			'singular'  => __( 'Customer', 'woocommerce' ),
-			'plural'    => __( 'Customers', 'woocommerce' ),
-			'ajax'      => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Customer', 'woocommerce' ),
+				'plural'   => __( 'Customers', 'woocommerce' ),
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -59,10 +61,10 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 
 		switch ( $column_name ) {
 
-			case 'name' :
+			case 'name':
 				return $row['name'];
 
-			case 'email' :
+			case 'email':
 				return $row['email'];
 
 		}
@@ -77,8 +79,8 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'name'    => __( 'Name', 'registrations-for-woocommerce' ),
-			'email'   => __( 'Email', 'registrations-for-woocommerce' ),
+			'name'  => __( 'Name', 'registrations-for-woocommerce' ),
+			'email' => __( 'Email', 'registrations-for-woocommerce' ),
 		);
 
 		return $columns;
@@ -96,12 +98,12 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 
 		$orders_query = get_posts( $args2 );
 
-		$orders = array();
+		$orders     = array();
 		$variations = array();
-		$products = array();
+		$products   = array();
 
 		foreach ( $orders_query as $order_query ) {
-			$order = wc_get_order( $order_query );
+			$order    = wc_get_order( $order_query );
 			$orders[] = $order;
 		}
 
@@ -109,7 +111,7 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 		parse_str( $_SERVER['QUERY_STRING'] );
 
 		$variation = wc_get_product( $details );
-		$found = array();
+		$found     = array();
 
 		// Only save the oders that contain this variation
 		foreach ( $orders as $order ) {
@@ -119,7 +121,6 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 				}
 			}
 		}
-
 
 		$registred = array();
 
@@ -133,12 +134,15 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 					if ( ! empty( $registration['date'] ) ) {
 						// Filter just only for the correct variation
 						if ( strpos( $registration['date'], $variation_date ) ) {
-							if( ! empty( $registration['participants'] ) ) {
-							foreach ( $registration['participants'] as $participant ) {
-								array_push( $registred, array(
-									'name' => $participant['name'] . ' ' . $participant['surname'],
-									'email' => $participant['email']
-									));
+							if ( ! empty( $registration['participants'] ) ) {
+								foreach ( $registration['participants'] as $participant ) {
+									array_push(
+										$registred,
+										array(
+											'name'  => $participant['name'] . ' ' . $participant['surname'],
+											'email' => $participant['email'],
+										)
+									);
 								}
 							}
 						}
@@ -154,10 +158,12 @@ class WC_Report_Detailed_Registration_Event extends WP_List_Table {
 		/**
 		 * Pagination.
 		 */
-		$this->set_pagination_args( array(
-			'total_items' => count( $found ),
-			'per_page'    => count( $found ),
-			'total_pages' => 1
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => count( $found ),
+				'per_page'    => count( $found ),
+				'total_pages' => 1,
+			)
+		);
 	}
 }
